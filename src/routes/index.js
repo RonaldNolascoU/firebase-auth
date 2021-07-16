@@ -1,14 +1,11 @@
-
-import Router from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 import Login from '../components/Login';
 import Register from '../components/Register';
 import Dashboard from '../components/Dashboard';
 
-//Vue.use(Router)
 
-const router = new Router({
-    mode: 'history',
-    base: process.env.BASE_URL,
+const router = new createRouter({
+    history: createWebHistory(process.env.BASE_URL),
     routes: [
         {
         path: '/login',

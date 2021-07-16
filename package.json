@@ -9,12 +9,11 @@
   },
   "dependencies": {
     "bootstrap": "^5.0.2",
-    "bootstrap-vue": "^2.21.2",
     "core-js": "^3.6.5",
     "firebase": "^8.7.1",
     "uninstall": "0.0.0",
     "vue": "^3.0.0",
-    "vue-router": "^3.5.2",
+    "vue-router": "^4.0.10",
     "vuex": "^4.0.0"
   },
   "devDependencies": {

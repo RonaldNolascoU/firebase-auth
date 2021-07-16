@@ -4,7 +4,8 @@ import router from './routes/index';
 import firebase from 'firebase';
 import store from './store';
 
-
+// Import Bootstrap an BootstrapVue CSS files (order is important)
+import 'bootstrap/dist/css/bootstrap.css'
 
 //Vue.config.productionTip = false;
 
@@ -24,4 +25,5 @@ firebase.auth().onAuthStateChanged(user => {
     store.dispatch("fetchUser", user);
 });
 
-createApp(App).use(store).use(router).mount("#app");
+const app = createApp(App);
+app.use(router).use(store).mount("#app");
