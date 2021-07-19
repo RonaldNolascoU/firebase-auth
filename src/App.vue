@@ -1,16 +1,21 @@
 <template>
-  <div>
-    <navbar></navbar>
-    <main class="py-4">
+  <v-app>
+    <v-main>
       <router-view></router-view>
-    </main>
-  </div>
+    </v-main>
+  </v-app>
 </template>
+
 <script>
-import navbar from "./components/Navbar";
+
+
 export default {
-  components: {
-    navbar
-  }
-};
+  name: 'App',
+
+  
+
+  data: () => ({
+    //
+  }),
+}
 </script>

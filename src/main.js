@@ -1,8 +1,12 @@
-import { createApp } from 'vue';
-import App from './App.vue';
+import { createApp } from 'vue'
+import vuetify from './plugins/vuetify'
+import App from './App.vue'
 import router from './routes/index';
-import firebase from 'firebase/app';
+import firebase from 'firebase';
 import store from './store';
+
+// Import Bootstrap an BootstrapVue CSS files (order is important)
+import 'bootstrap/dist/css/bootstrap.css'
 
 //Vue.config.productionTip = false;
 
@@ -22,4 +26,5 @@ firebase.auth().onAuthStateChanged(user => {
     store.dispatch("fetchUser", user);
 });
 
-createApp(App).use(router).use(store).mount("#app");
+const app = createApp(App);
+app.use(vuetify).use(router).use(store).mount("#app");
