@@ -1,0 +1,29 @@
+{
+  "name": "vue-js-node-express-plaid-firebase",
+  "version": "1.0.0",
+  "description": "Integreate Vue with Express, Serve Vue app with Express on same Server/Port",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "vue",
+    "nodejs",
+    "express",
+    "rest",
+    "api",
+    "plaid",
+    "firebase"
+  ],
+  "author": "elbana",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "connect-history-api-fallback": "^1.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "plaid": "^8.2.0",
+    "util": "^0.12.4"
+  }
+}
