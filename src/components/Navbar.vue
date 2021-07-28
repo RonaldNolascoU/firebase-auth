@@ -73,7 +73,7 @@ export default {
       return {
         items: [
           { title: 'Profile', icon: 'mdi-account' },
-          { title: 'Dashboard', icon: 'mdi-view-dashboard' },
+          { title: 'Dashboard', icon: 'mdi-view-dashboard', route: '/dashboard' },
           { title: 'Account', icon: 'mdi-account-box' },
           { title: 'Admin', icon: 'mdi-gavel' },
           { title: 'Content', icon: 'mdi-gavel', route: '/content' },
