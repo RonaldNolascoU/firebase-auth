@@ -71,7 +71,7 @@
 
 
 <script>
-import firebase from "firebase";
+import AuthenticationService from '@/services/AuthenticationService';
 
 export default {
   data() {
@@ -85,20 +85,12 @@ export default {
     };
   },
   methods: {
-    submit() {
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.form.email, this.form.password)
-        .then(data => {
-          data.user
-            .updateProfile({
-              displayName: this.form.name
-            })
-            .then(() => {});
-        })
-        .catch(err => {
-          this.error = err.message;
-        });
+    async submit () {
+      const response = await AuthenticationService.register({
+        email: this.form.email,
+        password: this.form.password
+      })
+      console.log(response.data)
     }
   }
 };

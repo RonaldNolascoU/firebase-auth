@@ -1,19 +1,17 @@
-import {createRouter, createWebHistory} from 'vue-router';
+//import { createWebHistory, createRouter } from "vue-router";
+//import {createRouter} from 'vue-router';
+import Vue from 'vue';
+import Router from 'vue-router';
 import Login from '../components/Login';
 import Register from '../components/Register';
 import Dashboard from '../components/Dashboard';
-import Plaid from '../components/Plaid';
-import Exchange from '../components/Exchange';
-import Fire from '../components/Fire';
+import Content from '../components/Content';
 
-const router = new createRouter({
-    history: createWebHistory(process.env.BASE_URL),
+Vue.use(Router);
+
+const router = new Router({
     routes: [
-        {
-            path: '/',
-            name: 'Fire',
-            component: Fire
-        },
+        
         {
         path: '/login',
         name: 'login',
@@ -30,14 +28,19 @@ const router = new createRouter({
             component: Dashboard
         },
         {
-            path: '/create-link-token',
-            name: 'Link',
-            component: Plaid
+            path: '/content',
+            name: 'Content',
+            component: Content
         },
         {
-            path: '/token-exchange',
-            name: 'Exchange',
-            component: Exchange
+            path: '/link/token/create',
+            name: 'Dashboard',
+            component: Dashboard
+        },
+        {
+            path: '/item/public_token/exchange',
+            name: 'Dashboard',
+            component: Dashboard
         }
 ]
 });
