@@ -5,10 +5,12 @@
         <div class="card">
           <div class="card-header">Register</div>
           <div class="card-body">
-            <div v-if="error" class="alert alert-danger">{{error}}</div>
+            <div v-if="error" class="alert alert-danger">{{ error }}</div>
             <form action="#" @submit.prevent="submit">
               <div class="form-group row">
-                <label for="name" class="col-md-4 col-form-label text-md-right">Name</label>
+                <label for="name" class="col-md-4 col-form-label text-md-right"
+                  >Name</label
+                >
 
                 <div class="col-md-6">
                   <input
@@ -25,7 +27,9 @@
               </div>
 
               <div class="form-group row">
-                <label for="email" class="col-md-4 col-form-label text-md-right">Email</label>
+                <label for="email" class="col-md-4 col-form-label text-md-right"
+                  >Email</label
+                >
 
                 <div class="col-md-6">
                   <input
@@ -42,7 +46,11 @@
               </div>
 
               <div class="form-group row">
-                <label for="password" class="col-md-4 col-form-label text-md-right">Password</label>
+                <label
+                  for="password"
+                  class="col-md-4 col-form-label text-md-right"
+                  >Password</label
+                >
 
                 <div class="col-md-6">
                   <input
@@ -58,7 +66,9 @@
 
               <div class="form-group row mb-0">
                 <div class="col-md-8 offset-md-4">
-                  <button type="submit" class="btn btn-primary">Register</button>
+                  <button type="submit" class="btn btn-primary">
+                    Register
+                  </button>
                 </div>
               </div>
             </form>
@@ -69,29 +79,29 @@
   </div>
 </template>
 
-
 <script>
-import AuthenticationService from '@/services/AuthenticationService';
+import AuthenticationService from '@/services/AuthenticationService'
 
 export default {
   data() {
     return {
       form: {
-        name: "",
-        email: "",
-        password: ""
+        name: '',
+        email: '',
+        password: '',
       },
-      error: null
-    };
+      error: null,
+    }
   },
   methods: {
-    async submit () {
-      const response = await AuthenticationService.register({
-        email: this.form.email,
-        password: this.form.password
-      })
+    async submit() {
+      const response = await AuthenticationService.register(this.form)
       console.log(response.data)
-    }
-  }
-};
+      const { user } = response.data
+      if (user) {
+        this.$router.push('dashboard')
+      }
+    },
+  },
+}
 </script>

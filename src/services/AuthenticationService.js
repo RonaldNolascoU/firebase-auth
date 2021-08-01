@@ -2,7 +2,7 @@ import Api from '@/services/Api'
 
 export default {
   register(credentials) {
-    return Api().post('register', credentials)
+    return Api().post('registerUser', credentials)
   },
 
   login(credentials) {
@@ -10,6 +10,6 @@ export default {
   },
 
   getPlaidToken() {
-    return Api().post('link/token/create')
+    return Api().post('createToken')
   },
 }

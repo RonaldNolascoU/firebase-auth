@@ -2,7 +2,7 @@ import axios from 'axios'
 
 export default () => {
   return axios.create({
-    baseURL: 'http://localhost:8080',
+    baseURL: 'https://us-central1-plaid-7344d.cloudfunctions.net',
     headers: {
       'Content-type': 'application/json',
     },

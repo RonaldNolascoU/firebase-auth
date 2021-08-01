@@ -1,6 +1,9 @@
 <template>
-
-  <v-app :class="{ 'pa-3': $vuetify.breakpoint.smAndUp }" :dark="darkTheme" id="inspire">
+  <v-app
+    :class="{ 'pa-3': $vuetify.breakpoint.smAndUp }"
+    :dark="darkTheme"
+    id="inspire"
+  >
     <v-container>
       <v-layout wrap>
         <v-flex sm12 md6 offset-md3>
@@ -17,16 +20,18 @@
               <p>Sign in with your username and password:</p>
               <v-form>
                 <v-text-field
-                              outline
-                              label="Username"
-                              type="text"
-                              v-model="email"></v-text-field>
+                  outline
+                  label="Username"
+                  type="text"
+                  v-model="email"
+                ></v-text-field>
                 <v-text-field
-                              outline
-                              hide-details
-                              label="Password"
-                              type="password"
-                              v-model="password"></v-text-field>
+                  outline
+                  hide-details
+                  label="Password"
+                  type="password"
+                  v-model="password"
+                ></v-text-field>
               </v-form>
             </v-card-text>
             <v-divider></v-divider>
@@ -35,7 +40,11 @@
                 Forgot password?
               </v-btn>
               <v-spacer></v-spacer>
-              <v-btn color="info" :large="$vuetify.breakpoint.smAndUp" @click="login">
+              <v-btn
+                color="info"
+                :large="$vuetify.breakpoint.smAndUp"
+                @click="login"
+              >
                 Login
               </v-btn>
             </v-card-actions>
@@ -54,30 +63,32 @@
       </v-layout>
     </v-container>
   </v-app>
-
 </template>
 
 <script>
-import AuthenticationService from '@/services/AuthenticationService';
-
-  export default {
-    data () {
+import firebase from 'firebase'
+export default {
+  data() {
     return {
       darkTheme: true,
       platformName: 'Platform name',
       password: null,
-      email: null
+      email: null,
     }
   },
   methods: {
-    async login () {
-      const response = await AuthenticationService.login({
-        email: this.email,
-        password: this.password
-      })
-      console.log(response.data)
-      this.$router.push('dashboard')
-    }
-  }
+    async login() {
+      firebase
+        .auth()
+        .signInWithEmailAndPassword(this.email, this.password)
+        .then((user) => {
+          console.log('User Logged Successfully!', user)
+          this.$router.push('dashboard')
+        })
+        .catch((error) => {
+          console.log('Bad Login!')
+        })
+    },
+  },
 }
 </script>
