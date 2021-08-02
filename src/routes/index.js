@@ -7,6 +7,7 @@ import Register from '../components/Register'
 import Dashboard from '../components/Dashboard'
 import Content from '../components/Content'
 import store from '../store.js'
+import firebase from 'firebase'
 
 Vue.use(Router)
 
@@ -15,7 +16,7 @@ const router = new Router({
   routes: [
     {
       path: '/login',
-      name: 'login',
+      name: 'Login',
       component: Login,
     },
     {
@@ -24,35 +25,28 @@ const router = new Router({
       component: Register,
     },
     {
-      path: '/dashboard',
+      path: '/',
       name: 'Dashboard',
       component: Dashboard,
-    },
-    {
-      path: '/content',
-      name: 'Content',
-      component: Content,
-    },
-    {
-      path: '/link/token/create',
-      name: 'Dashboard',
-      component: Dashboard,
-    },
-    {
-      path: '/item/public_token/exchange',
-      name: 'Dashboard',
-      component: Dashboard,
+      meta: {
+        requiresAuth: true,
+      },
     },
   ],
 })
 
-setTimeout(() => {
-  const user = store.getters.user
-  console.log(user.loggedIn)
-  router.beforeEach((to, from, next) => {
-    if (to.name !== 'login' && !user.loggedIn) next({ name: 'login' })
-    else next()
-  })
-}, 500)
+router.beforeEach(async (to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+  await firebase.getCurrentUser()
+  const user = await store.getters.user
+  console.log(to, from)
+  if (requiresAuth && !user.loggedIn && to.path != '/login') {
+    next('login')
+  } else if (['/login', '/register'].includes(to.path) && user.loggedIn) {
+    next('/')
+  } else {
+    next()
+  }
+})
 
 export default router

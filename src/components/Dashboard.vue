@@ -1,17 +1,20 @@
 <template>
-  <div v-if="user.loggedIn">
-    <v-container>
-      <v-btn class="warning my-5" @click="openPlaidClient" :disabled="loading">
-        Link your accounts via Plaid
-      </v-btn>
+  <v-container>
+    <v-btn class="warning my-5" @click="openPlaidClient" :disabled="loading">
+      Link your accounts via Plaid
+    </v-btn>
+
+    <v-card elevation="2">
+      <v-card-title>Account Data</v-card-title>
+      <v-card-subtitle v-if="accounts.length == 0">No accounts</v-card-subtitle>
+      <v-card-subtitle v-if="error"> {{ error }}</v-card-subtitle>
       <v-progress-circular
+        class="d-flex m-auto"
         indeterminate
         color="primary"
         v-if="loading"
       ></v-progress-circular>
-
-      <v-card elevation="2" v-else>
-        <v-card-title>Account Data</v-card-title>
+      <div v-else>
         <v-list-item v-for="account in accounts" :key="account.account_id">
           <v-list-item-content>
             <v-list-item-title>{{ account.official_name }}</v-list-item-title>
@@ -23,9 +26,39 @@
             >
           </v-list-item-content>
         </v-list-item>
-      </v-card>
-    </v-container>
-  </div>
+      </div>
+    </v-card>
+
+    <v-card elevation="2" class="mt-5">
+      <v-card-title>Transactions </v-card-title>
+      <v-card-subtitle v-if="error"> {{ error }}</v-card-subtitle>
+      <v-card-subtitle v-if="transactions.length == 0"
+        >No transactions</v-card-subtitle
+      >
+      <v-progress-circular
+        class="d-flex m-auto"
+        indeterminate
+        color="primary"
+        v-if="loading"
+      ></v-progress-circular>
+      <div v-else>
+        <v-list-item
+          v-for="transaction in transactions"
+          :key="transaction.transaction_id"
+        >
+          <v-list-item-content>
+            <v-list-item-title>Name: {{ transaction.name }}</v-list-item-title>
+            <v-list-item-subtitle>
+              {{ transaction.transaction_id }}
+            </v-list-item-subtitle>
+            <v-list-item-title
+              >Amount: {{ transaction.amount }}</v-list-item-title
+            >
+          </v-list-item-content>
+        </v-list-item>
+      </div>
+    </v-card>
+  </v-container>
 </template>
 
 <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
@@ -50,12 +83,16 @@ export default {
       ],
       handler: null,
       accounts: [],
+      transactions: [],
       loading: false,
+      error: null,
     }
   },
   methods: {
     async fetchLinkToken() {
-      const response = await AuthenticationService.getPlaidToken()
+      const response = await AuthenticationService.getPlaidToken({
+        user: this.user,
+      })
       return response.data
     },
     async linkAccounts() {
@@ -63,22 +100,24 @@ export default {
       this.handler = Plaid.create({
         token: await this.fetchLinkToken(),
         onSuccess: async (publicToken, metadata) => {
-          console.log(publicToken)
-          console.log(metadata)
-          // TODO: Use axios here, remember we won't have the same domain on production
-          const accountQuery = await fetch(
-            'https://us-central1-plaid-7344d.cloudfunctions.net/exchangeToken',
-            {
-              method: 'POST',
-              body: JSON.stringify({ publicToken }),
-              headers: {
-                'content-Type': 'application/json',
-              },
-            }
-          )
-          const { accounts } = await accountQuery.json()
-          this.accounts = accounts
-          this.loading = false
+          await AuthenticationService.exchangeToken({
+            publicToken,
+            id: this.user.data.id,
+          })
+            .then((result) => {
+              const { accounts, transactions } = result.data
+              this.accounts = accounts
+              this.transactions = transactions
+              this.loading = false
+              this.error = null
+            })
+            .catch((err) => {
+              console.log(err, 'error')
+              this.loading = false
+              this.error = err
+              this.accounts = []
+              this.transactions = []
+            })
         },
         onExit: async (error, metadata) => {
           console.log(error)

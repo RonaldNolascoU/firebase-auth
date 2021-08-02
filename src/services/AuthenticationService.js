@@ -9,7 +9,10 @@ export default {
     return Api().post('login', credentials)
   },
 
-  getPlaidToken() {
-    return Api().post('createToken')
+  getPlaidToken(user) {
+    return Api().post('createToken', user)
+  },
+  exchangeToken(data) {
+    return Api().post('exchangeToken', data)
   },
 }

@@ -1,24 +1,25 @@
 <template>
   <nav>
     <v-toolbar class="indigo accent-2">
+      <v-app-bar-nav-icon
+        @click="drawer = true"
+        v-if="user.loggedIn"
+      ></v-app-bar-nav-icon>
       <v-toolbar-title class="white--text">
         <span class="font-weight-light">Plaid</span>
         <span>App</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <template v-if="!user.loggedIn">
-        <router-link to="login" class="white--text mr-2">Login</router-link>
-        <router-link to="register" class="white--text mr-2"
-          >Register</router-link
-        >
-      </template>
-      <span v-else>{{ user.data.email }}</span>
+      <span class="white--text" v-if="user.loggedIn">{{
+        user.data.displayName || user.data.email
+      }}</span>
     </v-toolbar>
 
     <v-navigation-drawer
       class="grey lighten-5"
+      v-model="drawer"
       dark
-      permanent
+      temporary
       app
       v-if="user.loggedIn"
     >
@@ -41,13 +42,13 @@
         </v-list-item>
       </v-list>
 
-      <!-- <template v-slot:append>
+      <template v-slot:append>
         <div class="pa-2">
-          <v-btn class="indigo" block>
+          <v-btn class="indigo" block @click="logout">
             Logout
           </v-btn>
         </div>
-      </template> -->
+      </template>
     </v-navigation-drawer>
   </nav>
 </template>
@@ -55,6 +56,18 @@
 import { mapGetters } from 'vuex'
 import firebase from 'firebase'
 export default {
+  data() {
+    return {
+      drawer: false,
+      items: [
+        // { title: 'Profile', icon: 'mdi-account' },
+        { title: 'Dashboard', icon: 'mdi-view-dashboard', route: '/' },
+        // { title: 'Account', icon: 'mdi-account-box' },
+        // { title: 'Admin', icon: 'mdi-gavel' },
+        // { title: 'Content', icon: 'mdi-gavel', route: '/content' },
+      ],
+    }
+  },
   computed: {
     ...mapGetters({
       user: 'user',
@@ -64,27 +77,14 @@ export default {
     console.log(this.user, 'f user')
   },
   methods: {
-    // signOut() {
-    //   firebase
-    //     .auth()
-    //     .signOut()
-    //     .then(() => {
-    //       this.$router.replace({
-    //         name: "home"
-    //       });
-    //     });
-    // },
-  },
-  data() {
-    return {
-      items: [
-        // { title: 'Profile', icon: 'mdi-account' },
-        { title: 'Dashboard', icon: 'mdi-view-dashboard', route: '/dashboard' },
-        // { title: 'Account', icon: 'mdi-account-box' },
-        // { title: 'Admin', icon: 'mdi-gavel' },
-        // { title: 'Content', icon: 'mdi-gavel', route: '/content' },
-      ],
-    }
+    logout() {
+      firebase
+        .auth()
+        .signOut()
+        .then(() => {
+          this.$router.replace('/login')
+        })
+    },
   },
 }
 </script>

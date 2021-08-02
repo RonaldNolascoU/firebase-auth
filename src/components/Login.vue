@@ -11,7 +11,7 @@
             <v-card-title>
               <v-layout align-center justify-space-between>
                 <h3 class="headline">
-                  {{ platformName }}
+                  Login to Plaid
                 </h3>
               </v-layout>
             </v-card-title>
@@ -36,10 +36,10 @@
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions :class="{ 'pa-3': $vuetify.breakpoint.smAndUp }">
-              <v-btn color="info" flat>
+              <!-- <v-btn color="info" flat>
                 Forgot password?
-              </v-btn>
-              <v-spacer></v-spacer>
+              </v-btn> -->
+              <!-- <v-spacer></v-spacer> -->
               <v-btn
                 color="info"
                 :large="$vuetify.breakpoint.smAndUp"
@@ -81,7 +81,7 @@ export default {
         .signInWithEmailAndPassword(this.email, this.password)
         .then((user) => {
           console.log('User Logged Successfully!', user)
-          this.$router.push('dashboard')
+          this.$router.push('/')
         })
         .catch((error) => {
           console.log('Bad Login!')

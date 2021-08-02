@@ -90,7 +90,16 @@ export default {
           // Signed in
           var user = userCredential.user
           console.log(user, 'user')
-          this.$router.push('dashboard')
+          user
+            .updateProfile({
+              displayName: this.form.name,
+            })
+            .then((result) => {
+              this.$router.push('/')
+            })
+            .catch((err) => {
+              console.log(err, 'err')
+            })
           // ...
         })
         .catch((error) => {
