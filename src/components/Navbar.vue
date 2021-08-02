@@ -6,12 +6,13 @@
         <span>App</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <router-link to="login" class="white--text mr-2">Login</router-link>
-      <router-link to="register" class="white--text mr-2">Register</router-link>
-      <v-btn class="info">
-        <span>Sync</span>
-        
-      </v-btn>
+      <template v-if="!user.loggedIn">
+        <router-link to="login" class="white--text mr-2">Login</router-link>
+        <router-link to="register" class="white--text mr-2"
+          >Register</router-link
+        >
+      </template>
+      <span v-else>{{ user.data.email }}</span>
     </v-toolbar>
 
     <v-navigation-drawer
@@ -19,6 +20,7 @@
       dark
       permanent
       app
+      v-if="user.loggedIn"
     >
       <v-list>
         <v-list-item
@@ -32,53 +34,57 @@
           </v-list-item-icon>
 
           <v-list-item-content>
-            <v-list-item-title class="grey--text">{{ item.title }}</v-list-item-title>
+            <v-list-item-title class="grey--text">{{
+              item.title
+            }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </v-list>
 
-      <template v-slot:append>
+      <!-- <template v-slot:append>
         <div class="pa-2">
           <v-btn class="indigo" block>
             Logout
           </v-btn>
         </div>
-      </template>
+      </template> -->
     </v-navigation-drawer>
   </nav>
 </template>
 <script>
-import { mapGetters } from "vuex";
-import firebase from "firebase";
+import { mapGetters } from 'vuex'
+import firebase from 'firebase'
 export default {
   computed: {
     ...mapGetters({
-// map `this.user` to `this.$store.getters.user`
-      user: "user"
-    })
+      user: 'user',
+    }),
+  },
+  mounted() {
+    console.log(this.user, 'f user')
   },
   methods: {
-    signOut() {
-      firebase
-        .auth()
-        .signOut()
-        .then(() => {
-          this.$router.replace({
-            name: "home"
-          });
-        });
+    // signOut() {
+    //   firebase
+    //     .auth()
+    //     .signOut()
+    //     .then(() => {
+    //       this.$router.replace({
+    //         name: "home"
+    //       });
+    //     });
+    // },
+  },
+  data() {
+    return {
+      items: [
+        // { title: 'Profile', icon: 'mdi-account' },
+        { title: 'Dashboard', icon: 'mdi-view-dashboard', route: '/dashboard' },
+        // { title: 'Account', icon: 'mdi-account-box' },
+        // { title: 'Admin', icon: 'mdi-gavel' },
+        // { title: 'Content', icon: 'mdi-gavel', route: '/content' },
+      ],
     }
   },
-  data () {
-      return {
-        items: [
-          { title: 'Profile', icon: 'mdi-account' },
-          { title: 'Dashboard', icon: 'mdi-view-dashboard', route: '/dashboard' },
-          { title: 'Account', icon: 'mdi-account-box' },
-          { title: 'Admin', icon: 'mdi-gavel' },
-          { title: 'Content', icon: 'mdi-gavel', route: '/content' },
-        ],
-      }
-    },
-};
+}
 </script>

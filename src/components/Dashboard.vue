@@ -1,44 +1,52 @@
 <template>
-  <v-container>
-    <v-btn class="warning my-5" @click="openPlaidClient" :disabled="loading">
-      Link your accounts via Plaid
-    </v-btn>
-    <v-progress-circular
-      indeterminate
-      color="primary"
-      v-if="loading"
-    ></v-progress-circular>
+  <div v-if="user.loggedIn">
+    <v-container>
+      <v-btn class="warning my-5" @click="openPlaidClient" :disabled="loading">
+        Link your accounts via Plaid
+      </v-btn>
+      <v-progress-circular
+        indeterminate
+        color="primary"
+        v-if="loading"
+      ></v-progress-circular>
 
-    <v-card elevation="2" v-else>
-      <v-card-title>Account Data</v-card-title>
-      <v-list-item v-for="account in accounts" :key="account.account_id">
-        <v-list-item-content>
-          <v-list-item-title>{{ account.official_name }}</v-list-item-title>
-          <v-list-item-subtitle>
-            {{ account.account_id }}
-          </v-list-item-subtitle>
-          <v-list-item-title
-            >Balance: {{ account.balances.current }}</v-list-item-title
-          >
-        </v-list-item-content>
-      </v-list-item>
-    </v-card>
-  </v-container>
+      <v-card elevation="2" v-else>
+        <v-card-title>Account Data</v-card-title>
+        <v-list-item v-for="account in accounts" :key="account.account_id">
+          <v-list-item-content>
+            <v-list-item-title>{{ account.official_name }}</v-list-item-title>
+            <v-list-item-subtitle>
+              {{ account.account_id }}
+            </v-list-item-subtitle>
+            <v-list-item-title
+              >Balance: {{ account.balances.current }}</v-list-item-title
+            >
+          </v-list-item-content>
+        </v-list-item>
+      </v-card>
+    </v-container>
+  </div>
 </template>
 
 <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
 
 <script>
 import AuthenticationService from '@/services/AuthenticationService'
+import { mapGetters } from 'vuex'
 export default {
+  computed: {
+    ...mapGetters({
+      user: 'user',
+    }),
+  },
   data() {
     return {
       items: [
-        { title: 'Profile', icon: 'mdi-account' },
+        // { title: 'Profile', icon: 'mdi-account' },
         { title: 'Dashboard', icon: 'mdi-view-dashboard' },
-        { title: 'Account', icon: 'mdi-account-box' },
-        { title: 'Admin', icon: 'mdi-gavel' },
-        { title: 'Content', icon: 'mdi-gavel', route: '/content' },
+        // { title: 'Account', icon: 'mdi-account-box' },
+        // { title: 'Admin', icon: 'mdi-gavel' },
+        // { title: 'Content', icon: 'mdi-gavel', route: '/content' },
       ],
       handler: null,
       accounts: [],
@@ -59,7 +67,7 @@ export default {
           console.log(metadata)
           // TODO: Use axios here, remember we won't have the same domain on production
           const accountQuery = await fetch(
-            'http://localhost:5001/plaid-7344d/us-central1/exchangeToken',
+            'https://us-central1-plaid-7344d.cloudfunctions.net/exchangeToken',
             {
               method: 'POST',
               body: JSON.stringify({ publicToken }),

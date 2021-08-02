@@ -53,11 +53,9 @@
         <v-flex sm12 md6 offset-md3>
           <v-layout align-center justify-space-between>
             <p class="caption my-3">
-              <a href="#">Privacy Policy</a>
-              |
-              <a href="#">Terms of Service</a>
+              Don't have an account?
+              <router-link :to="'/register'">Register</router-link>
             </p>
-            <p class="caption my-3">Powered by <a href="#">Plaid</a></p>
           </v-layout>
         </v-flex>
       </v-layout>
