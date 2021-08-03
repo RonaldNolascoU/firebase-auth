@@ -66,6 +66,7 @@
 <script>
 import AuthenticationService from '@/services/AuthenticationService'
 import { mapGetters } from 'vuex'
+import firebase from 'firebase'
 export default {
   computed: {
     ...mapGetters({
@@ -87,6 +88,9 @@ export default {
       loading: false,
       error: null,
     }
+  },
+  async mounted() {
+    await this.getAccounts()
   },
   methods: {
     async fetchLinkToken() {
@@ -131,6 +135,15 @@ export default {
     async openPlaidClient() {
       await this.linkAccounts()
       this.handler.open()
+    },
+    async getAccounts() {
+      const collection = await firebase.firestore().collection('/transactions')
+      collection.get().then((snapshot) => {
+        console.log(snapshot, 'snap')
+        snapshot.forEach((doc) => {
+          console.log(doc.data(), 'document')
+        })
+      })
     },
   },
 }
