@@ -10,9 +10,24 @@
         <span>App</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
-      <span class="white--text" v-if="user.loggedIn">{{
+      <v-menu offset-y v-if="user.loggedIn">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn outlined dark v-bind="attrs" v-on="on">
+            <v-icon dark left>mdi-account-circle</v-icon>
+            {{ user.data.displayName || user.data.email }}
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item>
+            <v-btn class="indigo white--text" block @click="logout">
+              Logout
+            </v-btn>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+      <!-- <span class="white--text" v-if="user.loggedIn">{{
         user.data.displayName || user.data.email
-      }}</span>
+      }}</span> -->
     </v-toolbar>
 
     <v-navigation-drawer
@@ -41,14 +56,6 @@
           </v-list-item-content>
         </v-list-item>
       </v-list>
-
-      <template v-slot:append>
-        <div class="pa-2">
-          <v-btn class="indigo" block @click="logout">
-            Logout
-          </v-btn>
-        </div>
-      </template>
     </v-navigation-drawer>
   </nav>
 </template>

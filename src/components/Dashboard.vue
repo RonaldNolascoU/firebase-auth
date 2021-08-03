@@ -91,6 +91,7 @@ export default {
   },
   async mounted() {
     await this.getAccounts()
+    await this.getTransactions()
   },
   methods: {
     async fetchLinkToken() {
@@ -137,11 +138,27 @@ export default {
       this.handler.open()
     },
     async getAccounts() {
-      const collection = await firebase.firestore().collection('/transactions')
+      const collection = await firebase
+        .firestore()
+        .collection('/accounts')
+        .where('user_id', '==', this.user.data.id)
       collection.get().then((snapshot) => {
-        console.log(snapshot, 'snap')
+        console.log(snapshot, 'snapshot a')
         snapshot.forEach((doc) => {
-          console.log(doc.data(), 'document')
+          this.accounts.push(doc.data())
+        })
+      })
+    },
+    async getTransactions() {
+      console.log(this.user.data.id)
+      const collection = await firebase
+        .firestore()
+        .collection('/transactions')
+        .where('user_id', '==', this.user.data.id)
+      collection.get().then((snapshot) => {
+        console.log(snapshot, 'snapshot t')
+        snapshot.forEach((doc) => {
+          this.transactions.push(doc.data())
         })
       })
     },
